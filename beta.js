@@ -36,9 +36,9 @@ function credTest( req, res) { return res.json('Creds looking good muchacho')}
 async function run(req, res) {
   const obj = req.body;
   console.log(obj)
-  if (!obj || obj == {} || !obj.reference_Url || !obj.query_Url) return res.status(400).send('invalid params');
-
+  if (!obj || !obj.reference_url || !obj.query_url) { return res.status(400).send('invalid params');}
   // url check to make sure they are valid. eg: no spaces, etc
+  
   REFERENCE_IMAGE = obj.reference_url
   QUERY_IMAGE = obj.query_url
   //load a reference photo & compare to a query single face photo
@@ -80,9 +80,8 @@ async function run(req, res) {
     faceapi.draw.drawDetections(draw, face_to_detect)
     saveFile('face_to_match.jpg', draw.toBuffer('image/jpeg'))
     const feedback = bestMatch.toString().split(' ')
-    let confidence = parseInt(feedback[2].slice(0, -1))
+    let confidence = parseFloat(feedback[2].slice(1, -1))
     console.log(feedback)
-    console.log(confidence)
     //if level of confidence is <45 result = 0
     if (feedback[0] === 'person' && confidence > 0.45  ) { //&& feedback[1].indexOf(conidence) > 0.44 {
       return res.send({result:1, confidence , message: 'query image is present in reference photo'})

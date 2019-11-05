@@ -33,13 +33,12 @@ app.listen(4955)
 function auth(req, res, next) {
   const user = basicAuth(req)
 
-
-  if (!user || !user.name || !user.pass){
+  if (!('name' in user) || !('pass' in user)){
     return res.status(400).send('unauthorized');
   }
   else if ( user.name == 'jason' && user.pass == 'iNeedCoffee2day'){
     return next()
   }
-  return res.status(400).send('unauthorized');
+  return res.status(400).send('authentication required');
 
 }
